@@ -1,4 +1,11 @@
-export const API_BASE = "http://localhost:3001";
+const isLocal =
+  location.hostname === "localhost" ||
+  location.hostname === "127.0.0.1";
+
+export const API_BASE = isLocal
+  ? "http://localhost:3001"
+  : "http://api.diptrade.xpasha85.ru";
+
 
 export async function getHealth() {
     try {
