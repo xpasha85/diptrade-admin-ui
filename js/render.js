@@ -26,9 +26,9 @@ export function renderTable(cars) {
     }
 
     // Стало (по ID - новые сверху):
-    const sortedCars = [...cars].sort((a, b) => b.id - a.id);
+    // const sortedCars = [...cars].sort((a, b) => b.id - a.id);
 
-    sortedCars.forEach(car => {
+    cars.forEach(car => {
         const tr = document.createElement('tr');
         
         // Полупрозрачность для скрытых

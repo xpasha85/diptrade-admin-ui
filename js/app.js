@@ -118,6 +118,9 @@ function applyFilters() {
         return true;
     });
 
+    // Сортируем глобальный список: Новые ID (большие) - сверху
+    filteredCars.sort((a, b) => b.id - a.id);
+    
     // Сбрасываем на 1 страницу при любой фильтрации (кроме пагинации)
     // Но renderPage вызывается отдельно
     renderPage();
