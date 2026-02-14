@@ -36,7 +36,7 @@ export function initForm(refreshCallback) {
     setupPhotoManager();
     setupAutoCapitalize(form);
     setupDynamicLogic(form);
-
+    setupSoldOnLogic(form);
 
 
     const close = () => {
@@ -250,6 +250,38 @@ function setupDynamicLogic(form) {
     modelInput.addEventListener('input', updateTitle);
 }
 
+function setupSoldOnLogic(form) {
+    const soldWrap = document.getElementById('sold-on-wrap');
+    const soldInput = form.sold_on; // input name="sold_on"
+    const soldCheck = form.is_sold;
+
+    if (!soldWrap || !soldInput || !soldCheck) return;
+
+    const sync = () => {
+        const on = !!soldCheck.checked;
+        soldWrap.style.display = on ? 'inline-flex' : 'none';
+
+        if (on) {
+            // МИКРО-UX: если включили "Продано" и дата пустая — ставим сегодня
+            if (!soldInput.value) {
+                const d = new Date();
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                soldInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+        } else {
+            // Если сняли "Продано" — очищаем поле в UI
+            soldInput.value = '';
+        }
+    };
+
+        soldCheck.addEventListener('change', sync);
+
+        // На старте (при открытии формы)
+        sync();
+    }
+
 function initYearSelect() {
     const select = document.getElementById('year-select');
     if (!select) return;
@@ -290,6 +322,12 @@ function buildPayload(formData) {
         
         in_stock: formData.get('in_stock') === 'on',
         is_sold: formData.get('is_sold') === 'on',
+        // sold_on:
+        // - если is_sold=true и дата выбрана -> строка YYYY-MM-DD
+        // - если is_sold=false -> явно отправляем null (чтобы стереть старое значение в JSON)
+        sold_on: (formData.get('is_sold') === 'on')
+            ? (formData.get('sold_on') || undefined)
+            : null,
         is_visible: formData.get('hide_on_site') !== 'on',
         featured: formData.get('featured') === 'on',
         is_auction: formData.get('is_auction') === 'on',
@@ -372,6 +410,16 @@ function fillForm(form, car) {
 
     form.in_stock.checked = !!car.in_stock;
     form.is_sold.checked = !!car.is_sold;
+    // sold_on из JSON -> в инпут (если есть)
+    if (form.sold_on) {
+        form.sold_on.value = car.sold_on || '';
+    }
+
+    // видимость поля даты (без переменной on)
+    const soldWrap = document.getElementById('sold-on-wrap');
+    if (soldWrap && form.is_sold) {
+        soldWrap.style.display = form.is_sold.checked ? 'inline-flex' : 'none';
+    }
     form.hide_on_site.checked = (car.is_visible === false);
     form.featured.checked = !!car.featured;
     form.is_auction.checked = !!car.is_auction;

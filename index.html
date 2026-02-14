@@ -162,7 +162,14 @@
                     <div class="status-bar">
                         <label class="checkbox-label"><input type="checkbox" name="hide_on_site"> Скрыть на сайте </label>
                         <label><input type="checkbox" name="in_stock"> В наличии (выкуплено)</label>
-                        <label><input type="checkbox" name="is_sold"> Продано</label>
+                        <label style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;">
+                            <span><input type="checkbox" name="is_sold"> Продано</span>
+
+                            <span id="sold-on-wrap" style="display:none; align-items:center; gap:.35rem;">
+                                <small style="opacity:.75;">дата:</small>
+                                <input type="date" name="sold_on" style="width:auto; min-width: 150px;">
+                            </span>
+                        </label>
                         <label><input type="checkbox" name="featured"> ⭐ Показывать на главной</label>
                     </div>
 
