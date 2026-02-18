@@ -4,7 +4,7 @@ const isLocal =
 
 export const API_BASE = isLocal
   ? "http://localhost:3001"
-  : "https://api.diptrade.xpasha85.ru";
+  : "https://api.diptrade.ru";
 
 
 export async function getHealth() {
